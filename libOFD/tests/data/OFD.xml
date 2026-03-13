@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ofd:OFD xmlns:ofd="http://www.ofdspec.org/2016">
+  <ofd:DocBody>
+    <ofd:DocInfo>
+      <ofd:DocID>sample-doc-id</ofd:DocID>
+      <ofd:Creator>libOFD</ofd:Creator>
+      <ofd:CreationDate>2026-03-12</ofd:CreationDate>
+    </ofd:DocInfo>
+    <ofd:DocRoot>ExampleDoc/Document.xml</ofd:DocRoot>
+  </ofd:DocBody>
+</ofd:OFD>
+

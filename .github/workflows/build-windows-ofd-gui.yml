@@ -1,0 +1,74 @@
+name: build-windows-ofd-gui
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main, master ]
+    paths:
+      - "CMakeLists.txt"
+      - "CMakePresets.json"
+      - "libOFD/**"
+      - "ofd-gui/**"
+      - ".github/workflows/build-windows-ofd-gui.yml"
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup MSVC Dev Environment
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Setup Ninja
+        uses: seanmiddleditch/gha-setup-ninja@v4
+
+      - name: Install Qt6
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: "6.6.3"
+          host: "windows"
+          target: "desktop"
+          arch: "win64_msvc2019_64"
+          modules: "qtbase"
+
+      - name: Configure
+        shell: pwsh
+        run: |
+          cmake --preset windows-release
+
+      - name: Build
+        shell: pwsh
+        run: |
+          cmake --build --preset windows-release --config Release
+
+      - name: Deploy Qt Runtime
+        shell: pwsh
+        run: |
+          $exe = "build/windows-release/ofd-gui/Release/ofd-gui.exe"
+          if (!(Test-Path $exe)) { $exe = "build/windows-release/ofd-gui/ofd-gui.exe" }
+          if (!(Test-Path $exe)) { throw "ofd-gui.exe not found" }
+          windeployqt --release --no-translations --no-opengl-sw --no-compiler-runtime $exe
+
+      - name: Package
+        shell: pwsh
+        run: |
+          $pkgDir = "build/windows-release/package/ofd-gui-win-x64"
+          New-Item -Path $pkgDir -ItemType Directory -Force | Out-Null
+          $exe = "build/windows-release/ofd-gui/Release/ofd-gui.exe"
+          if (!(Test-Path $exe)) { $exe = "build/windows-release/ofd-gui/ofd-gui.exe" }
+          Copy-Item $exe $pkgDir -Force
+          $exeDir = Split-Path $exe -Parent
+          Get-ChildItem $exeDir -Filter "*.dll" | ForEach-Object {
+            Copy-Item $_.FullName $pkgDir -Force
+          }
+          Compress-Archive -Path "$pkgDir/*" -DestinationPath "build/windows-release/ofd-gui-win-x64.zip" -Force
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ofd-gui-win-x64
+          path: build/windows-release/ofd-gui-win-x64.zip
+

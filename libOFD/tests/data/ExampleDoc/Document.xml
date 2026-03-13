@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ofd:Document xmlns:ofd="http://www.ofdspec.org/2016">
+  <ofd:CommonData>
+    <ofd:MaxUnitID>10</ofd:MaxUnitID>
+    <ofd:PageArea>
+      <ofd:PhysicalBox>0 0 210 297</ofd:PhysicalBox>
+    </ofd:PageArea>
+    <ofd:PublicRes>PublicRes.xml</ofd:PublicRes>
+    <ofd:DocumentRes>DocumentRes.xml</ofd:DocumentRes>
+  </ofd:CommonData>
+  <ofd:DocInfo>
+    <ofd:DocID>sample-doc-id</ofd:DocID>
+    <ofd:Creator>libOFD</ofd:Creator>
+    <ofd:CreationDate>2026-03-12</ofd:CreationDate>
+  </ofd:DocInfo>
+  <ofd:Pages>
+    <ofd:Page ID="1" BaseLoc="Pages/Page_0/Content.xml" />
+    <ofd:Page ID="2" BaseLoc="Pages/Page_1/Content.xml" />
+  </ofd:Pages>
+</ofd:Document>
+
